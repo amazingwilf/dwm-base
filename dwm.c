@@ -73,7 +73,8 @@ enum {
 }; /* cursor */
 enum { 
     SchemeNorm, 
-    SchemeSel 
+    SchemeSel,
+    SchemeLtSymbol
 }; /* color schemes */
 enum { 
     NetSupported, 
@@ -816,6 +817,8 @@ drawbar(Monitor *m)
 	int boxw = drw->fonts->h / 6 + 2;
 	unsigned int i, occ = 0, urg = 0;
 	Client *c;
+	Fnt *cur;
+	cur = drw->fonts;
 
 	if (!m->showbar)
 		return;
@@ -843,9 +846,12 @@ drawbar(Monitor *m)
 				urg & 1 << i);
 		x += w;
 	}
+
+	drw->fonts = drw->fonts->next;
 	w = TEXTW(m->ltsymbol);
-	drw_setscheme(drw, scheme[SchemeNorm]);
+	drw_setscheme(drw, scheme[SchemeLtSymbol]);
 	x = drw_text(drw, x, 0, w, bh, lrpad / 2, m->ltsymbol, 0);
+	drw->fonts = cur;
 
 	if ((w = m->ww - tw - x) > bh) {
 		if (m->sel) {
